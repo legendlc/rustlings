@@ -16,8 +16,6 @@
 // There are at least two ways to implement this that are both correct-- but
 // one is a lot shorter! Scroll down for hints to both ways.
 
-#![feature(int_error_matching)]
-
 use std::num::ParseIntError;
 
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
@@ -25,10 +23,7 @@ pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let cost_per_item = 5;
     let qty = item_quantity.parse::<i32>()?;
 
-    match qty {
-        Ok(num) => Ok(num * cost_per_item + processing_fee),
-        Err(_) => Err(ParseIntError{ kind: std::num::IntErrorKind::InvalidDigit }),
-    }
+    Ok(qty * cost_per_item + processing_fee)
 }
 
 #[cfg(test)]
