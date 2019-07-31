@@ -3,7 +3,7 @@
 // Scroll down for hints!
 
 fn main() {
-    let a = ???
+    let a: [i32; 1000] = [0_i32; 1000];
 
     if a.len() >= 100 {
         println!("Wow, that's a big array!");
