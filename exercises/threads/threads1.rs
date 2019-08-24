@@ -6,6 +6,7 @@
 // you've got it :)
 
 use std::sync::Arc;
+use std::sync::RwLock;
 use std::thread;
 use std::time::Duration;
 
@@ -14,16 +15,21 @@ struct JobStatus {
 }
 
 fn main() {
-    let status = Arc::new(JobStatus { jobs_completed: 0 });
+    let status = Arc::new(RwLock::new(JobStatus { jobs_completed: 0 }));
     let status_shared = status.clone();
     thread::spawn(move || {
         for _ in 0..10 {
+            let mut value = status_shared.write().unwrap();
             thread::sleep(Duration::from_millis(250));
-            status_shared.jobs_completed += 1;
+            (*value).jobs_completed += 1;
         }
     });
-    while status.jobs_completed < 10 {
-        println!("waiting... ");
+
+    let mut count = 0;
+    while count < 10 {
+        let mut local = status.read().unwrap();
+        count = local.jobs_completed;
+        println!("waiting... {}", count);
         thread::sleep(Duration::from_millis(500));
     }
 }
